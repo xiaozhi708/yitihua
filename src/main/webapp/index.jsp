@@ -10,23 +10,23 @@
 <html>
 <head>
     <title>员工列表</title>
-    <%--<%--%>
-    <%--pageContext.setAttribute("APP_PATH",request.getContextPath());--%>
-    <%--%>--%>
+    <%
+    pageContext.setAttribute("APP_PATH",request.getContextPath());
+    %>
     <!--web路径
     不以/开始的相对路径，找资源，以当前资源的路径为基准，经常容易出问题
     以/开始的相对路径，找资源，以服务器的根路径为标准（http:localhost:3306）,需要加上项目名
     -->
-    <%--<!--引入JQuery-->--%>
-    <%--<script type="text/javascript" src="${APP_PATH}/static/js/jquery-3.3.1.min.js"></script>--%>
-    <%--<!--引入bootstrap样式-->--%>
-    <%--<link href="${APP_PATH}/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">--%>
-    <%--<script src="${APP_PATH}/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>--%>
     <!--引入JQuery-->
-    <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="${APP_PATH}/static/js/jquery-3.3.1.min.js"></script>
     <!--引入bootstrap样式-->
-    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <link href="${APP_PATH}/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="${APP_PATH}/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <%--<!--引入JQuery-->--%>
+    <%--<script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>--%>
+    <%--<!--引入bootstrap样式-->--%>
+    <%--<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">--%>
+    <%--<script src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>--%>
 </head>
 <body>
 <!-- 员工修改的模态框Modal -->

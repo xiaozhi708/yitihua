@@ -23,7 +23,9 @@ public class EmployeeService {
      * @return
      */
     public List<Employee> getAll() {
-        return employeeMapper.selectByExampleWithDept(null);
+        EmployeeExample example = new EmployeeExample();
+       example.setOrderByClause("emp_id ASC");
+        return employeeMapper.selectByExampleWithDept(example);
     }
 
     /**
@@ -85,6 +87,10 @@ public class EmployeeService {
         employeeMapper.deleteByExample(example);
     }
 
+    /**
+     * 批量删除员工
+     * @param ids
+     */
     public void deleteBatch(List<Integer> ids) {
         EmployeeExample example =new EmployeeExample();
         EmployeeExample.Criteria criteria = example.createCriteria();
