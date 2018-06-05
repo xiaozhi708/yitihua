@@ -2,8 +2,6 @@ package com.xiaozhi.test;
 
 
 import com.xiaozhi.common.entity.Department;
-import com.xiaozhi.common.entity.DepartmentExample;
-import com.xiaozhi.common.entity.Employee;
 import com.xiaozhi.mapper.DepartmentMapper;
 import com.xiaozhi.mapper.EmployeeMapper;
 import org.apache.ibatis.session.SqlSession;
@@ -12,8 +10,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.UUID;
 
 
 /**

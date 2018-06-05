@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2018/3/23/023.
+ * 自动生成entity和mapper的工具
  */
 public class MBGTest {
     public static void main(String[] args) throws Exception{

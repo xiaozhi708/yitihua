@@ -1,7 +1,6 @@
 package com.xiaozhi.service;
 
 import com.xiaozhi.common.entity.Department;
-import com.xiaozhi.common.entity.Msg;
 import com.xiaozhi.mapper.DepartmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
