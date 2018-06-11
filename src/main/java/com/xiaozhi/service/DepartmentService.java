@@ -1,23 +1,15 @@
 package com.xiaozhi.service;
 
 import com.xiaozhi.common.entity.Department;
-import com.xiaozhi.mapper.DepartmentMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * Created by Administrator on 2018/3/25/025.
+ * Created by Administrator on 2018/6/7/007.
  */
-@Service
-public class DepartmentService {
+public interface DepartmentService {
 
-    @Autowired
-    private DepartmentMapper departmentMapper;
-
-    public List<Department> getDepts() {
-         List<Department> list =departmentMapper.selectByExample(null);
-         return list;
-    }
+    public List<Department> getDepts();
 }

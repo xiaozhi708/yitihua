@@ -23,6 +23,9 @@
     就将该请求转由Web应用服务器默认的Servlet处理，如果不是静态资源的请求，才由DispatcherServlet继续处理。 -->
     <mvc:default-servlet-handler/>
 
+    <!--&lt;!&ndash; 静态资源映射 &ndash;&gt;-->
+    <!--<mvc:resources mapping="/static/**" location="/static/" cache-period="31536000"/>-->
+
     <!--能支持SpringMVC更高级的一些功能，JSR303校验，快捷的ajax，映射动态请求-->
     <mvc:annotation-driven/>
 </beans>
