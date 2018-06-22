@@ -2,7 +2,9 @@ package com.xiaozhi.realm;
 
 import com.xiaozhi.common.entity.User;
 import com.xiaozhi.common.entity.UserExample;
+import com.xiaozhi.mapper.RoleMapper;
 import com.xiaozhi.mapper.UserMapper;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -12,7 +14,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -22,21 +23,27 @@ import java.util.Set;
 public class UserRealm extends AuthorizingRealm {
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    RoleMapper roleMapper;
     //授权
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        //放回值：AuthorizationInfo，封装获取的用户对应的所有角色，SimpleAuthorizationInfo(set<String>)
+        //返回值：AuthorizationInfo，封装获取的用户对应的所有角色，SimpleAuthorizationInfo(set<String>)
         //参数列表：principalCollection 登录的身份，登录的用户名
+        clearAuthz();
         AuthorizationInfo info =null;
         //3.查询数据库，是否存在指定用户名和密码的用户
         String userName =principalCollection.toString();
+        System.out.println("授权中用户名是："+userName);
         UserExample userExample =new UserExample();
         UserExample.Criteria c = userExample.createCriteria();
-        c.andAccountEqualTo(userName);
+        c.andUsernameEqualTo(userName);
         List<User> userList = userMapper.selectByExample(userExample);
         if(userList!=null){
-            Set<String> roles =new HashSet<String>();
-//            roles.add(userList.get(0).getRoles());
+//            Set<String> roles =new HashSet<String>();
+            Set<String> roles = roleMapper.selectByUserId(userList.get(0).getId());
+//           roles.add(userList.get(0).getId());
           info =new SimpleAuthorizationInfo(roles);
+            System.out.println(info);
         }else {
             //5.如果没有查到，抛出一个异常
             throw new AuthenticationException();
@@ -44,6 +51,11 @@ public class UserRealm extends AuthorizingRealm {
 
         return info;
     }
+    //清空权限
+    public void clearAuthz(){
+        this.clearCachedAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
+    }
+
     //认证
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         SimpleAuthenticationInfo info =null;
@@ -55,12 +67,12 @@ public class UserRealm extends AuthorizingRealm {
         //3.查询数据库，是否存在指定用户名和密码的用户
         UserExample userExample =new UserExample();
         UserExample.Criteria c = userExample.createCriteria();
-        c.andAccountEqualTo(userName);
+        c.andUsernameEqualTo(userName);
         List<User> userList = userMapper.selectByExample(userExample);
         if(userList!=null){
             //4.如果查询到了，封装查询结果，返回给我们的调用
             Object principal = userName;
-            Object credentials =userList.get(0).getPwd();
+            Object credentials =userList.get(0).getPassword();
             String realmName =this.getName();
             //ByteSource
             ByteSource salt =ByteSource.Util.bytes(userName);

@@ -4,12 +4,16 @@ package com.xiaozhi.test;
 import com.xiaozhi.common.entity.Department;
 import com.xiaozhi.mapper.DepartmentMapper;
 import com.xiaozhi.mapper.EmployeeMapper;
+import com.xiaozhi.mapper.RoleMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.Iterator;
+import java.util.Set;
 
 
 /**
@@ -30,6 +34,8 @@ public class MapperTest {
     EmployeeMapper employeeMapper;
     @Autowired
     SqlSession sqlSession;
+    @Autowired
+    RoleMapper roleMapper;
     /**
      * 测试DepartmentMapper
      */
@@ -55,4 +61,18 @@ public class MapperTest {
 //        System.out.println("批量完成");
 
     }
+
+    /**
+     * 测试roleMapper
+     */
+    @Test
+    public void testRole(){
+        Set<String> roles =roleMapper.selectByUserId(1);
+        Iterator<String> it =roles.iterator();
+        while (it.hasNext()){
+            String str =it.next();
+            System.out.println(str);
+        }
+    }
+
 }

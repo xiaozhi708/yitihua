@@ -4709,9 +4709,9 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   color: #777;
 }
 .pagination {
-  display: inline-block;
+  display: block;
   padding-left: 0;
-  margin: 20px 0;
+  margin: 0 240px;
   border-radius: 4px;
 }
 .pagination > li {

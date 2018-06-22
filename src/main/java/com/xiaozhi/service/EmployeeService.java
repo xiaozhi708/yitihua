@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface EmployeeService {
     public List<Employee> getAll();
+    public List<Employee> selectByDept(int userDeptId);
     public void saveEmp(Employee employee);
     public boolean checkUser(String empName);
     public Employee getEmp(Integer id);

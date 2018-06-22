@@ -4,16 +4,19 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xiaozhi.common.entity.Employee;
 import com.xiaozhi.common.entity.Msg;
+import com.xiaozhi.common.entity.User;
+import com.xiaozhi.common.entity.UserExample;
+import com.xiaozhi.mapper.UserMapper;
 import com.xiaozhi.service.EmployeeService;
-import com.xiaozhi.service.Impl.EmployeeServiceImpl;
+import com.xiaozhi.service.UserService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
-
+import org.apache.shiro.subject.Subject;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +32,19 @@ public class EmployeeController {
 
     @Autowired
     EmployeeService employeeService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    UserMapper userMapper;
 
+    /**
+     * 去往员工列表页
+     * @return
+     */
+    @RequestMapping(value = "/toEmp",method = RequestMethod.GET)
+    public String toEmp(){
+        return "list";
+    }
     /**
      * 单个批量二合一
      * 批量删除，1-2-3
@@ -106,12 +121,20 @@ public class EmployeeController {
     @RequestMapping("/emps")
     @ResponseBody
     public Msg getEmpsWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn) {
-        //这不是一个分页查询
-        //引入PageHelper分页插件
-        //在查询之前只需调用PageHelper.startPage,传入页码和每页的大小
-        PageHelper.startPage(pn, 5);
-        //startPage后面紧跟的这个查询就是一个分页查询
-        List<Employee> emps = employeeService.getAll();
+
+        List<Employee> emps;
+        if(SecurityUtils.getSubject().hasRole("admin")||SecurityUtils.getSubject().hasRole("总经理")){
+            PageHelper.startPage(pn, 5);
+            emps = employeeService.getAll();
+        }else{
+            //根据用户名查询用户管理的部门id
+            String userName = SecurityUtils.getSubject().getPrincipal().toString();
+            int userDeptId = userService.selectDeptIdByUserName(userName);
+
+            PageHelper.startPage(pn, 5);//这句话必须紧跟在需要分页的查询语句前面
+            emps =employeeService.selectByDept(userDeptId);
+
+        }
         //用PageInfo对结果进行包装，只需要将pageInfo交给页面就行了（封装了详细的分页信息，包括有我们查询出来的数据）
         PageInfo page = new PageInfo(emps, 5);//5为连续显示的页码
         return Msg.success().add("pageInfo", page);

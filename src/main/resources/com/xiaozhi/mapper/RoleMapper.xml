@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.xiaozhi.common.entity.Role">
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -64,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name
+    id, name, description
   </sql>
   <select id="selectByExample" parameterType="com.xiaozhi.common.entity.RoleExample" resultMap="BaseResultMap">
     select
@@ -80,6 +81,11 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByUserId" parameterType="java.lang.Integer" resultType="java.lang.String">
+    select tr.name
+    from tbl_role as tr,tbl_user_role as tur
+    where tr.id=tur.role_id and tur.user_id=#{userId};
+  </select>
   <delete id="deleteByExample" parameterType="com.xiaozhi.common.entity.RoleExample">
     delete from tbl_role
     <if test="_parameter != null">
@@ -87,8 +93,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.xiaozhi.common.entity.Role">
-    insert into tbl_role (id, name)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR})
+    insert into tbl_role (id, name, description
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.xiaozhi.common.entity.Role">
     insert into tbl_role
@@ -99,6 +107,9 @@
       <if test="name != null">
         name,
       </if>
+      <if test="description != null">
+        description,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -106,6 +117,9 @@
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -124,6 +138,9 @@
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
       </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -132,7 +149,8 @@
   <update id="updateByExample" parameterType="map">
     update tbl_role
     set id = #{record.id,jdbcType=INTEGER},
-      name = #{record.name,jdbcType=VARCHAR}
+      name = #{record.name,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

@@ -3,10 +3,11 @@
 <mapper namespace="com.xiaozhi.mapper.UserMapper">
   <resultMap id="BaseResultMap" type="com.xiaozhi.common.entity.User">
     <result column="id" jdbcType="INTEGER" property="id" />
-    <result column="account" jdbcType="VARCHAR" property="account" />
-    <result column="pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
     <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="dept_id" jdbcType="INTEGER" property="deptId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, account, pwd, name, email
+    id, username, password, real_name, email, dept_id
   </sql>
   <select id="selectByExample" parameterType="com.xiaozhi.common.entity.UserExample" resultMap="BaseResultMap">
     select
@@ -90,10 +91,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.xiaozhi.common.entity.User">
-    insert into tbl_user (id, account, pwd, 
-      name, email)
-    values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
-      #{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR})
+    insert into tbl_user (id, username, password, 
+      real_name, email, dept_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{realName,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{deptId,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.xiaozhi.common.entity.User">
     insert into tbl_user
@@ -101,34 +104,40 @@
       <if test="id != null">
         id,
       </if>
-      <if test="account != null">
-        account,
+      <if test="username != null">
+        username,
       </if>
-      <if test="pwd != null">
-        pwd,
+      <if test="password != null">
+        password,
       </if>
-      <if test="name != null">
-        name,
+      <if test="realName != null">
+        real_name,
       </if>
       <if test="email != null">
         email,
+      </if>
+      <if test="deptId != null">
+        dept_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="account != null">
-        #{account,jdbcType=VARCHAR},
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
       </if>
-      <if test="pwd != null">
-        #{pwd,jdbcType=VARCHAR},
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
+      <if test="realName != null">
+        #{realName,jdbcType=VARCHAR},
       </if>
       <if test="email != null">
         #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        #{deptId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -144,17 +153,20 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.account != null">
-        account = #{record.account,jdbcType=VARCHAR},
+      <if test="record.username != null">
+        username = #{record.username,jdbcType=VARCHAR},
       </if>
-      <if test="record.pwd != null">
-        pwd = #{record.pwd,jdbcType=VARCHAR},
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
       </if>
-      <if test="record.name != null">
-        name = #{record.name,jdbcType=VARCHAR},
+      <if test="record.realName != null">
+        real_name = #{record.realName,jdbcType=VARCHAR},
       </if>
       <if test="record.email != null">
         email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deptId != null">
+        dept_id = #{record.deptId,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -164,10 +176,11 @@
   <update id="updateByExample" parameterType="map">
     update tbl_user
     set id = #{record.id,jdbcType=INTEGER},
-      account = #{record.account,jdbcType=VARCHAR},
-      pwd = #{record.pwd,jdbcType=VARCHAR},
-      name = #{record.name,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR}
+      username = #{record.username,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      real_name = #{record.realName,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      dept_id = #{record.deptId,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

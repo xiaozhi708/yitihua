@@ -38,12 +38,12 @@ public class ShiroRealm extends AuthenticatingRealm {
         //3.查询数据库，是否存在指定用户名和密码的用户
         UserExample userExample =new UserExample();
         UserExample.Criteria c = userExample.createCriteria();
-        c.andAccountEqualTo(userName);
+        c.andUsernameEqualTo(userName);
         List<User> userList = userMapper.selectByExample(userExample);
         if(userList!=null){
             //4.如果查询到了，封装查询结果，返回给我们的调用
                 Object principal = userName;
-                Object credentials =userList.get(0).getPwd();
+                Object credentials =userList.get(0).getPassword();
                 String realmName =this.getName();
             //ByteSource
             ByteSource salt =ByteSource.Util.bytes(userName);

@@ -64,10 +64,7 @@
     </tx:advice>
 
     <!--&lt;!&ndash;开启事务注解扫描&ndash;&gt;-->
-    <!--<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"></tx:annotation-driven>-->
-
     <!--Spring配置文件的核心点（数据源，与mybatis的整合，事务控制）-->
-
     <!--=================================================Shiro相关配置============================================================-->
     <!--&lt;!&ndash; Sample RDBMS data source that would exist in any application - not Shiro related. &ndash;&gt;-->
     <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
@@ -97,27 +94,16 @@
         <property name="cacheManager" ref="cacheManager"/>
         <!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
         <!--<property name="sessionMode" value="native"/>-->
-        <!--Realm实现类-->
-        <!--单个realm-->
-        <!--<property name="realm" ref="jdbcRealm"/>-->
-        <!--多个realm第一种方式-->
-        <!--<property name="realms">-->
-        <!--<list>-->
-        <!--<ref bean="jdbcRealm"></ref>-->
-        <!--<ref bean="secondRealm"></ref>-->
-        <!--</list>-->
-        <!--</property>-->
-        <!--多个realm第二种方式-->
-        <property name="authenticator" ref="authenticator"></property>
 
+        <!--认证-->
+        <property name="authenticator" ref="authenticator"></property>
+        <!--授权-->
         <property name="authorizer" ref="authorizer"></property>
     </bean>
     <!--多个realm第二种方式，自定义一个认证器-->
     <bean id ="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
         <property name="realms">
             <list>
-                <!--<ref bean="jdbcRealm"></ref>-->
-                <!--<ref bean="secondRealm"></ref>-->
                 <ref bean="UserRealm"></ref>
             </list>
         </property>
@@ -128,8 +114,6 @@
     <bean id="authorizer" class="org.apache.shiro.authz.ModularRealmAuthorizer">
         <property name="realms">
             <list>
-                <!--<ref bean="jdbcRealm"></ref>-->
-                <!--<ref bean="secondRealm"></ref>-->
                 <ref bean="UserRealm"></ref>
             </list>
         </property>
@@ -174,13 +158,6 @@
     EHCACH缓存框架
     -->
     <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-        <!-- Set a net.sf.ehcache.CacheManager instance here if you already have one.  If not, a new one
-             will be creaed with a default config:
-             <property name="cacheManager" ref="ehCacheManager"/> -->
-        <!-- If you don't have a pre-built net.sf.ehcache.CacheManager instance to inject, but you want
-             a specific Ehcache configuration to be used, specify that here.  If you don't, a default
-             will be used.:
-        <property name="cacheManagerConfigFile" value="classpath:some/path/to/ehcache.xml"/> -->
         <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
     </bean>
 
@@ -200,35 +177,21 @@
     <!--</bean>-->
     <!--</property>-->
     <!--</bean>-->
-
-    <!-- =========================================================
-         Shiro Spring-specific integration
-         ========================================================= -->
-    <!-- Post processor that automatically invokes init() and destroy() methods
-         for Spring-configured Shiro objects so you don't have to
-         1) specify an init-method and destroy-method attributes for every bean
-            definition and
-         2) even know which Shiro objects require these methods to be
-            called. -->
-    <!--必须要有这样的实例，用来管理在spring容器当中的shiro常见的对象-->
-    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
-
-    <!-- Enable Shiro Annotations for Spring-configured beans.  Only run after
-         the lifecycleBeanProcessor has run: -->
-    <!--启用shiro注解-->
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
-          depends-on="lifecycleBeanPostProcessor"/>
-    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-        <property name="securityManager" ref="securityManager"/>
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.apache.shiro.authz.UnauthorizedException">/static/403.html</prop>
+            </props>
+        </property>
     </bean>
 
     <!-- Secure Spring remoting:  Ensure any Spring Remoting method invocations can be associated
-         with a Subject for security checks. -->
+          with a Subject for security checks. -->
     <!--网络方面-->
     <bean id="secureRemoteInvocationExecutor" class="org.apache.shiro.spring.remoting.SecureRemoteInvocationExecutor">
         <property name="securityManager" ref="securityManager"/>
     </bean>
-
+    <!--<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"></tx:annotation-driven>-->
     <!-- Define the Shiro Filter here (as a FactoryBean) instead of directly in web.xml -
          web.xml uses the DelegatingFilterProxy to access this bean.  This allows us
          to wire things with more control as well utilize nice Spring things such as
@@ -239,9 +202,9 @@
     -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <!--<property name="loginUrl" value="logon.jsp"/>-->
-        <!--<property name="successUrl" value="success.jsp"/>-->
-        <!--<property name="unauthorizedUrl" value="unauthorized.jsp"/>-->
+        <property name="loginUrl" value="/views/login.jsp"/>
+        <property name="successUrl" value="/views/list.jsp"/>
+        <property name="unauthorizedUrl" value="/views/login.jsp"/>
         <!-- The 'filters' property is not necessary since any declared javax.servlet.Filter bean
              defined will be automatically acquired and available via its beanName in chain
              definitions, but you can perform overrides or parent/child consolidated configuration
@@ -253,17 +216,21 @@
         </property> -->
         <!--代表我们要完成shiro过滤器的具体配置-->
         <property name="filterChainDefinitions">
-        <value>
-            <!--/logon**=anon-->
-            <!--/logout =logout-->
-            <!--/bootstrap-3.3.7-dist/**=anon-->
-            <!--/js/**=anon-->
-            <!--/static/**=anon-->
-            <!--/admin.jsp =roles[admin]-->
-            <!--/user.jsp =roles[user]-->
-            <!--/** = authc-->
-        </value>
-    </property>
+            <value>
+                /login**=anon
+                /static**=anon
+                <!--/**=authc-->
+                <!--/logout =logout-->
+                <!--/bootstrap-3.3.7-dist/**=anon-->
+                <!--/js/**=anon-->
+                <!--/static/**=anon-->
+                <!--/admin.jsp =roles[admin]-->
+                <!--/user.jsp =roles[user]-->
+                <!--/** = authc-->
+            </value>
+        </property>
     </bean>
+
+
 
 </beans>
