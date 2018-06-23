@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xiaozhi.mapper.UserMapper">
   <resultMap id="BaseResultMap" type="com.xiaozhi.common.entity.User">
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="u_id" jdbcType="INTEGER" property="uId" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="real_name" jdbcType="VARCHAR" property="realName" />
@@ -68,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, username, password, real_name, email, dept_id
+    u_id, username, password, real_name, email, dept_id
   </sql>
   <select id="selectByExample" parameterType="com.xiaozhi.common.entity.UserExample" resultMap="BaseResultMap">
     select
@@ -91,18 +91,18 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.xiaozhi.common.entity.User">
-    insert into tbl_user (id, username, password, 
+    insert into tbl_user (u_id, username, password, 
       real_name, email, dept_id
       )
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{uId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{realName,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{deptId,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.xiaozhi.common.entity.User">
     insert into tbl_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
+      <if test="uId != null">
+        u_id,
       </if>
       <if test="username != null">
         username,
@@ -121,8 +121,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
+      <if test="uId != null">
+        #{uId,jdbcType=INTEGER},
       </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
@@ -150,8 +150,8 @@
   <update id="updateByExampleSelective" parameterType="map">
     update tbl_user
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
+      <if test="record.uId != null">
+        u_id = #{record.uId,jdbcType=INTEGER},
       </if>
       <if test="record.username != null">
         username = #{record.username,jdbcType=VARCHAR},
@@ -175,7 +175,7 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update tbl_user
-    set id = #{record.id,jdbcType=INTEGER},
+    set u_id = #{record.uId,jdbcType=INTEGER},
       username = #{record.username,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
       real_name = #{record.realName,jdbcType=VARCHAR},
@@ -185,4 +185,77 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+  <!--新增-->
+  <sql id="WithRole_Column_List">
+    tu.u_id, tu.username, tu.password, tu.real_name,tu.email, tu.dept_id,tr.id,tr.name
+  </sql>
+  <resultMap id="WithRoleResultMap" type="com.xiaozhi.common.entity.User">
+    <result column="u_id" jdbcType="INTEGER" property="uId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+    <!--指定联合查询出的部门字段的封装-->
+    <association property="role" javaType="com.xiaozhi.common.entity.Role">
+      <id column="id" property="id"/>
+      <result column="name" property="name"/>
+    </association>
+  </resultMap>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.xiaozhi.common.entity.User">
+    update tbl_user
+    <set>
+      <if test="uId != null">
+        u_id = #{uId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null">
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        dept_id = #{deptId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where u_id=#{uId,jdbcType=INTEGER}
+  </update>
+
+  <!--查询用户的同时查询角色-->
+  <select id="selectByExampleWithRole" resultMap="WithRoleResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="WithRole_Column_List" />
+    from tbl_user tu
+    left join tbl_user_role tur
+    on tu.u_id=tur.user_id
+    left join tbl_role tr
+    on tr.id=tur.role_id
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKeyWithRole" resultMap="WithRoleResultMap">
+    select
+    <include refid="WithRole_Column_List"/>
+    from tbl_user tu
+    left join tbl_user_role tur
+    on tu.u_id=tur.user_id
+    left join tbl_role tr
+    on tr.id=tur.role_id
+    where tu.u_id = #{uId,jdbcType=INTEGER}
+  </select>
 </mapper>

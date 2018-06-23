@@ -21,11 +21,14 @@
         display:inline-block !important;
         margin : 0 30px 0 0;
     }
+    .hiddd {
+        display: none;
+    }
 </style>
 <head>
     <title>员工列表</title>
     <%
-    pageContext.setAttribute("APP_PATH",request.getContextPath());
+        pageContext.setAttribute("APP_PATH",request.getContextPath());
     %>
     <!--web路径
     不以/开始的相对路径，找资源，以当前资源的路径为基准，经常容易出问题
@@ -60,45 +63,57 @@
 <body>
 
 <!-- 员工修改的模态框Modal -->
-<div class="modal fade" id="empUpdateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="userUpdateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">员工修改</h4>
+                <h4 class="modal-title">用户修改</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">empName</label>
+                        <label class="col-sm-2 control-label">用户名</label>
                         <div class="col-sm-10">
-                            <p class="form-control-static" id="empName_update_static"></p>
+                            <p class="form-control-static" id="username_update_static"></p>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="email_add_input" class="col-sm-2 control-label">email</label>
+                        <label for="password_update_input" class="col-sm-2 control-label">密码</label>
                         <div class="col-sm-10">
-                            <input type="email" name ="email" class="form-control" id="email_update_input" placeholder="email@atguigu.com">
+                            <input type="text" name ="password" class="form-control" id="password_update_input" placeholder="">
                             <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label  class="col-sm-2 control-label">gender</label>
+                        <label for="realName_update_input" class="col-sm-2 control-label">真名</label>
                         <div class="col-sm-10">
-                            <label class="radio-inline">
-                                <input type="radio" name="gender" id="gender1_update_input" value="M" checked="checked"> 男
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="gender" id="gender2_update_input" value="F"> 女
-                            </label>
+                            <input type="text" name ="realName" class="form-control" id="realName_update_input" placeholder="">
+                            <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label  class="col-sm-2 control-label">deptName</label>
+                        <label for="email_update_input" class="col-sm-2 control-label">email</label>
+                        <div class="col-sm-10">
+                            <input type="email" name ="email" class="form-control" id="email_update_input" placeholder="">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-sm-2 control-label">角色</label>
+                        <div class="col-sm-4">
+                            <!--角色提交角色id即可-->
+                            <select class="form-control" name="role.id" id="role_update_select">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="update_dept_div" style="display: none;">
+                        <label  class="col-sm-2 control-label">部门</label>
                         <div class="col-sm-4">
                             <!--部门提交部门id即可-->
-                            <select class="form-control" name="dId" id="dept_update_select">
+                            <select class="form-control" name="deptId" id="dept_update_select">
 
                             </select>
                         </div>
@@ -108,68 +123,80 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="emp_update_btn">更新</button>
+                <button type="button" class="btn btn-primary" id="user_update_btn">更新</button>
             </div>
         </div>
     </div>
 </div>
-<!-- 员工添加的模态框Modal -->
-<div class="modal fade" id="empAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<!-- 用户添加的模态框Modal -->
+<div class="modal fade" id="userAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">员工添加</h4>
+                <h4 class="modal-title" id="myModalLabel">用户添加</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">empName</label>
+                        <label class="col-sm-2 control-label">用户名</label>
                         <div class="col-sm-10">
-                            <input type="text" name ="empName" class="form-control" id="empName_add_input" placeholder="empName">
+                            <input type="text" name ="username" class="form-control" id="username_add_input" placeholder="liangzc">
                             <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="email_add_input" class="col-sm-2 control-label">email</label>
+                        <label class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-10">
+                            <input type="text" name ="password" class="form-control" id="password_add_input" placeholder="123456">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">真名</label>
+                        <div class="col-sm-10">
+                            <input type="text" name ="realName" class="form-control" id="realName_add_input" placeholder="梁志承">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email_add_input" class="col-sm-2 control-label">邮箱</label>
                         <div class="col-sm-10">
                             <input type="email" name ="email" class="form-control" id="email_add_input" placeholder="email@atguigu.com">
                             <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label  class="col-sm-2 control-label">gender</label>
-                        <div class="col-sm-10">
-                            <label class="radio-inline">
-                                <input type="radio" name="gender" id="gender1_add_input" value="M" checked="checked"> 男
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="gender" id="gender2_add_input" value="F"> 女
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label  class="col-sm-2 control-label">deptName</label>
+                        <label  class="col-sm-2 control-label">角色</label>
                         <div class="col-sm-4">
-                            <!--部门提交部门id即可-->
-                            <select class="form-control" name="dId" id="dept_add_select">
+                            <!--角色提交角色id即可-->
+                            <select class="form-control" name="role.id" id="role_add_select">
 
                             </select>
                         </div>
                     </div>
+                        <div class="form-group" id ="add_dept_div" style="display: none;">
+                            <label  class="col-sm-2 control-label">部门</label>
+                            <div class="col-sm-4">
+                                <!--部门提交部门id即可-->
+                                <select class="form-control" name="deptId" id="dept_add_select">
+
+                                </select>
+                            </div>
+                        </div>
 
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="emp_save_btn">保存</button>
+                <button type="button" class="btn btn-primary" id="user_save_btn">保存</button>
             </div>
         </div>
     </div>
 </div>
 <!--搭建显示页面-->
-<nav class="breadcrumb" style="line-height:1.6em;"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 员工管理 <span class="c-gray en">&gt;</span> 员工列表 </nav>
+<nav class="breadcrumb" style="line-height:1.6em;"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户管理 <span class="c-gray en">&gt;</span> 用户列表 </nav>
 <div class="container">
     <!--标题行-->
     <div class="row">
@@ -177,36 +204,30 @@
             <h1>小智有限公司</h1>
         </div>
     </div>
-<shiro:hasAnyRoles name="admin,总经理,部门经理">
     <!--增加，删除按钮-->
-        <div class="row">
-            <div class="col-lg-4 col-lg-offset-8">
-                <button class="btn btn-primary" id="emp_add_modal_btn">新增</button>
-                <button class="btn btn-danger" id="emp_delete_all_btn">批量删除</button>
-            </div>
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-8">
+            <button class="btn btn-primary" id="user_add_modal_btn">新增</button>
+            <button class="btn btn-danger" id="user_delete_all_btn">批量删除</button>
         </div>
-</shiro:hasAnyRoles>
+    </div>
 
     <!--显示表格信息-->
     <div class="row">
         <div class="col-lg-12">
-            <table class="table table-hover" id="emps_table">
+            <table class="table table-hover" id="users_table">
                 <thead>
                 <tr>
-<shiro:hasAnyRoles name="admin,总经理,部门经理">
                     <th>
                         <input type="checkbox" id="check_all"/>
                     </th>
-</shiro:hasAnyRoles>
                     <th>ID</th>
-                    <th>empName</th>
-                    <th>gender</th>
-                    <th>email</th>
-                    <th>deptName</th>
-                    <shiro:hasAnyRoles name="admin,总经理,部门经理">
-                        <th>操作</th>
-                    </shiro:hasAnyRoles>
-
+                    <th>登录名</th>
+                    <th>密码</th>
+                    <th>真名</th>
+                    <th>邮箱</th>
+                    <th>角色</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -228,6 +249,7 @@
 </div>
 
 <script type="text/javascript">
+
     var totalRecord,currentPage;
 
     //1.页面加载完成以后，直接发送一个ajax请求，要到分页数据
@@ -237,13 +259,13 @@
     });
     function to_page(pn) {
         $.ajax({
-            url: "/emps",
+            url: "/users",
             data: "pn=" + pn,
             type: "GET",
             success: function (result) {
                 //console.log(result);
                 //1.解析并显示员工数据
-                build_emps_table(result);
+                build_users_table(result);
                 //2.解析并显示分页信息
                 build_page_info(result);
                 //3.解析并显示分页条
@@ -252,20 +274,21 @@
         });
     }
     //解析显示表格信息
-    function build_emps_table(result) {
+    function build_users_table(result) {
         //将全选取消
         $("#check_all").prop("checked",false);
         //清空table表格
-        $("#emps_table tbody").empty();
-        var emps = result.extend.pageInfo.list;
-        $.each(emps, function (index, item) {
+        $("#users_table tbody").empty();
+        var users = result.extend.pageInfo.list;
+        $.each(users, function (index, item) {
 //            alert(item.empName);
             var checkBoxTd =$("<td><input type='checkbox' class='check_item'></td>");
-            var empIdTd = $("<td></td>").append(item.empId);
-            var empNameTd = $("<td></td>").append(item.empName);
-            var genderTd = $("<td></td>").append(item.gender == 'M' ? "男" : "女");
+            var userIdTd = $("<td></td>").append(item.uId);
+            var usernameTd = $("<td></td>").append(item.username);
+            var passwordTd = $("<td></td>").append(item.password);
+            var realNameTd = $("<td></td>").append(item.realName);
             var emailTd = $("<td></td>").append(item.email);
-            var deptNameTd = $("<td></td>").append(item.department.deptName);
+            var roleNameTd = $("<td></td>").append(item.role.name);
 //            <button class="btn btn-primary btn-sm">
 //                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 //                新增
@@ -273,26 +296,25 @@
             var editBtn = $("<button></button>").addClass("btn btn-primary btn-sm edit_btn")
                 .append($("<span></span>").addClass("glyphicon glyphicon-pencil")).append("编辑");
             //为编辑按钮添加一个自定义的属性，来表示当前员工的id
-            editBtn.attr("edit-id",item.empId);
+            editBtn.attr("edit-id",item.uId);
             var delBtn = $("<button></button>").addClass("btn btn-danger btn-sm delete_btn")
                 .append($("<span></span>").addClass("glyphicon glyphicon-trash")).append("删除");
             //为删除按钮添加一个自定义的属性，来表示当前员工的id
-            delBtn.attr("del-id",item.empId);
+            delBtn.attr("del-id",item.uId);
             var btnId = $("<td></td>").append(editBtn).append(" ").append(delBtn);
             //append方法执行完成后还是返回原来的元素
             $("<tr></tr>")
-                <shiro:hasAnyRoles name="admin,总经理,部门经理">
                 .append(checkBoxTd)
-                </shiro:hasAnyRoles>
-                .append(empIdTd)
-                .append(empNameTd)
-                .append(genderTd)
+                .append(userIdTd)
+                .append(usernameTd)
+                .append(passwordTd)
+                .append(realNameTd)
                 .append(emailTd)
-                .append(deptNameTd)
-                <shiro:hasAnyRoles name="admin,总经理,部门经理">
+                .append(roleNameTd)
+                <%--<shiro:hasAnyRoles name="admin">--%>
                 .append(btnId)
-                </shiro:hasAnyRoles>
-                .appendTo("#emps_table tbody");
+                <%--</shiro:hasAnyRoles>--%>
+                .appendTo("#users_table tbody");
         });
     }
     //解析显示分页信息
@@ -371,49 +393,33 @@
     }
 
     //点击新增按钮弹出模态框
-    $("#emp_add_modal_btn").click(function () {
+    $("#user_add_modal_btn").click(function () {
+        document.getElementById("add_dept_div").style.display="none";//将部门div隐藏
         //清除表单数据（表单完全重置（表单的数据，表单的样式））
-        reset_form("#empAddModal form");
-        //发出ajax请求，将部门信息查出来，显示在下拉列表中
-        getDepts("#empAddModal select");
+        reset_form("#userAddModal form");
+        //发出ajax请求，将角色信息查出来，显示在下拉列表中
+        getRoles("#role_add_select",1,-1,"add_dept_div");
         //弹出模态框
-        $("#empAddModal").modal({
+        $("#userAddModal").modal({
             backdrop: "static"
         });
     });
 
-    //查出所有的部门信息并显示在下拉列表中
-    function getDepts(ele) {
-        //清空之前下拉列表的值
-        $(ele).empty();
-        $.ajax({
-            url:"/depts",
-            type:"GET",
-            success:function (result) {
-                //console.log(result);
-                //显示部门信息在下拉列表中
-                //$("#empAddModal select").append("")
-                $.each(result.extend.depts,function () {
-                    var optionEle =$("<option></option>").append(this.deptName).attr("value",this.deptId);
-                    optionEle.appendTo(ele);
-                });
-            }
-        });
-    }
+
 
     //校验表单数据,前端正则检验主要为展示错误提示
     function validate_add_form(){
         //1、拿到要检验的数据，使用正则表达式
         //验证用户名
-        var empName = $("#empName_add_input").val();
+        var username = $("#username_add_input").val();
         var regName = /^([a-zA-Z0-9_-]{6,16})|(^[\u2E80-\u9FFF]{2,5})$/;
         //alert(regName.test(empName));
-        if(!regName.test(empName)){
+        if(!regName.test(username)){
             //alert("用户名可以是2~5位中文或者6~16位英文和数字的组合");
-            show_validate_msg("#empName_add_input","error","用户名可以是2~5位中文或者6~16位英文和数字的组合");
+            show_validate_msg("#username_add_input","error","用户名可以是2~5位中文或者6~16位英文和数字的组合");
             return false;
         }else{
-            show_validate_msg("#empName_add_input","success","");
+            show_validate_msg("#username_add_input","success","");
         }
         //验证email
         var email = $("#email_add_input").val();
@@ -444,28 +450,28 @@
     }
 
     //校验用户名是否正确
-    $("#empName_add_input").change(function () {
+    $("#username_add_input").change(function () {
         //发送ajax请求校验用户名是否正确（不重复）
-        var empName = $("#empName_add_input").val();
+        var username = $("#username_add_input").val();
 //        alert("用户名："+empName);
         $.ajax({
-            url:"/checkuser",
+            url:"/checkUserName",
             type:"POST",
-            data:"empName="+empName,
+            data:"username="+username,
             success:function (result) {
                 if(result.code==100){
-                    show_validate_msg("#empName_add_input","success","用户名可用");
-                    $("#emp_save_btn").attr("ajax-va","success");
+                    show_validate_msg("#username_add_input","success","用户名可用");
+                    $("#user_save_btn").attr("ajax-va","success");
                 }else{
-                    show_validate_msg("#empName_add_input","error",result.extend.va_msg);
-                    $("#emp_save_btn").attr("ajax-va","error");
+                    show_validate_msg("#username_add_input","error",result.extend.va_msg);
+                    $("#user_save_btn").attr("ajax-va","error");
                 }
             }
         });
     });
 
     //点击保存，保存员工
-    $("#emp_save_btn").click(function () {
+    $("#user_save_btn").click(function () {
         //1.将模态框中填写的表单数据提交给服务器进行保存
         //先对要提交给服务器的数据进行校验
         //1.前端jQuery校验（不查重）
@@ -478,15 +484,15 @@
         }
         //3.发送ajax请求保存员工
         $.ajax({
-            url:"/emp",
+            url:"/user",
             type:"POST",
-            data:$("#empAddModal form").serialize(),
+            data:$("#userAddModal form").serialize(),
             success:function (result) {
                 if(result.code==100){
                     //alert(result.msg);
                     //当员工保存成功
                     // 1.关闭模态框
-                    $("#empAddModal").modal('hide');
+                    $("#userAddModal").modal('hide');
                     // 2.来到最后一页，显示刚才保存的数据
                     //发送ajax请求显示最后一页即可，用全局变量totalRecord,利用分页插件的特性，传入一个比总页数大的数进去总能显示最后一页
                     to_page(totalRecord);
@@ -498,9 +504,9 @@
                         //显示邮箱错误信息
                         show_validate_msg("#email_add_input","error",result.extend.errorFields.email);
                     }
-                    if(undefined != result.extend.errorFields.empName){
-                        //显示员工名字错误信息
-                        show_validate_msg("#empName_add_input","error",result.extend.errorFields.empName);
+                    if(undefined != result.extend.errorFields.username){
+                        //显示用户名字错误信息
+                        show_validate_msg("#username_add_input","error",result.extend.errorFields.username);
                     }
                 }
 
@@ -509,32 +515,57 @@
         });
     });
 
+    //更新用户模态框 根据角色显隐部门div
+    $("#role_update_select").change(function () {
+        if($("#role_update_select option:selected").val()!=3){//当前角色不是部门经理则隐藏部门div
+            document.getElementById("update_dept_div").style.display="none";
+        }
+        if($("#role_update_select option:selected").val()==3){//当前角色是部门经理则显示部门div
+            $("#dept_update_select").empty();
+            getDepts("#dept_update_select",1);
+            document.getElementById("update_dept_div").style.display="";
+        }
+    });
+
+    //添加用户模态框 根据角色显隐部门div
+    $("#role_add_select").change(function () {
+        if($("#role_add_select option:selected").val()!=3){//当前角色不是部门经理则隐藏部门div
+            document.getElementById("add_dept_div").style.display="none";
+        }
+        if($("#role_add_select option:selected").val()==3){//当前角色是部门经理则显示部门div
+            $("#dept_add_select").empty();
+            getDepts("#dept_add_select",1);
+            document.getElementById("add_dept_div").style.display="";
+        }
+    });
+
+
     //我们是在按钮创建之前就绑定了click，所以绑定不上
     //1.可以在创建按钮时绑定 2.绑定点击，live
     //jquery新版没有live，使用on进行代替
     $(document).on("click",".edit_btn",function () {
-        //alert("edit");
-        //1.查出部门信息， 显示部门列表
-        //发出ajax请求，将部门信息查出来，显示在下拉列表中
-        getDepts("#empUpdateModal select");
-        //2.查出员工信息，显示员工信息
-        getEmp($(this).attr("edit-id"));
-        //3.把员工的id传递给模态框的更新按钮
-        $("#emp_update_btn").attr("edit-id",$(this).attr("edit-id"));
+
+        document.getElementById("update_dept_div").style.display="none";//将部门div隐藏
+
+        getUser($(this).attr("edit-id"));
+
+        //3.把用户的id传递给模态框的更新按钮
+        $("#user_update_btn").attr("edit-id",$(this).attr("edit-id"));
         //弹出模态框
-        $("#empUpdateModal").modal({
+        $("#userUpdateModal").modal({
             backdrop: "static"
         });
+
     });
     //单个删除
     $(document).on("click",".delete_btn",function () {
         //弹出是否确认删除对话框
-        var empName = $(this).parents("tr").find("td:eq(2)").text();
-        var empId =$(this).attr("del-id");
-        if(confirm("确认删除【"+empName+"】吗？")){
+        var username = $(this).parents("tr").find("td:eq(2)").text();
+        var uId =$(this).attr("del-id");
+        if(confirm("确认删除【"+username+"】吗？")){
             //确认，发出ajax请求即可
             $.ajax({
-                url:"/emp/"+empId,
+                url:"/user/"+uId,
                 type:"DELETE",
                 success:function (result) {
                     alert(result.msg);
@@ -544,29 +575,88 @@
             });
         }
     });
-    //根据员工id拿到员工数据
-    function getEmp(id) {
+    //根据用户id拿到员工数据
+    function getUser(uId) {
+        //初始化userRoleId和userDeptId
+        var userRoleId=-1;
+        var userDeptId=-1;
+        //alert(uId);
         $.ajax({
-            url:"/emp/"+id,
+            url:"/user/"+uId,
             type:"GET",
             success:function (result) {
-                //console.log(result);
-                var empData =result.extend.emp;
-                $("#empName_update_static").text(empData.empName);
-                $("#email_update_input").val(empData.email);
-                $("#empUpdateModal input[name=gender]").val([empData.gender]);
-                $("#empUpdateModal select").val([empData.dId]);
+                var userData =result.extend.user;
+                userRoleId =userData.role.id;//得到用户的角色id
+                userDeptId =userData.deptId;//得到用户的部门id
+                //alert("getUser内userRoleId:"+userRoleId+",userDeptId:"+userDeptId);
+                $("#username_update_static").text(userData.username);
+                $("#password_update_input").val(userData.password);
+                $("#realName_update_input").val(userData.realName);
+                $("#email_update_input").val(userData.email);
+                getRoles("#role_update_select",userRoleId,userDeptId,"update_dept_div");
+
             }
         });
     }
-    //点击更新，更新员工信息
-    $("#emp_update_btn").click(function () {
-        //验证邮箱
 
+//查出所有的角色信息并显示在下拉列表中
+function getRoles(ele,uri,udi,deptDivId) {
+    //清空之前下拉列表的值
+    $(ele).empty();
+    $.ajax({
+        url:"/user/roles",
+        type:"GET",
+        success:function (result) {
+            //console.log(result);
+            //alert("getRoles内的userRoleId:"+uri);
+            //$("#empAddModal select").append("")
+            $.each(result.extend.roles,function () {
+                var optionEle =$("<option></option>").append(this.name).attr("value",this.id);
+                if(uri>0&&this.id==uri){
+                    //alert("查出来的角色id："+this.id+"全局变量userRoleId："+uri);
+                    optionEle.attr("selected",true);
+                }
+                optionEle.appendTo(ele);
+            });
+            if(uri==3){//如果是部门经理就显示出部门下拉框
+                document.getElementById(deptDivId).style.display="";//将部门div显示出来
+                getDepts("#dept_update_select",udi);
+            }
+        }
+    });
+}
+
+//查出所有的部门信息并显示在下拉列表中
+function getDepts(ele,udi) {
+    //清空之前下拉列表的值
+    $(ele).empty();
+    $.ajax({
+        url:"/depts",
+        type:"GET",
+        success:function (result) {
+            // alert("得到了部门信息");
+            //console.log(result);
+            //显示部门信息在下拉列表中
+            //$("#empAddModal select").append("")
+            $.each(result.extend.depts,function () {
+                var optionEle =$("<option></option>").append(this.deptName).attr("value",this.deptId);
+                if(udi>0&&this.deptId==udi){
+                    //alert("查出来的部门id："+this.deptId+"全局变量userDeptId："+udi);
+                    optionEle.attr("selected",true);
+                }
+                optionEle.appendTo(ele);
+            });
+        }
+
+    });
+
+}
+    //点击更新，更新员工信息
+    $("#user_update_btn").click(function () {
+        //验证邮箱
         var email = $("#email_update_input").val();
         var regEmail = /^[a-z\d]+(\.[a-z\d]+)*@([\da-z](-[\da-z])?)+(\.{1,2}[a-z]+)+$/;
         if(!regEmail.test(email)){
-
             show_validate_msg("#email_update_input","error","邮箱格式不正确");
             return false;
         }else{
@@ -574,13 +664,13 @@
         }
         //发送ajax请求保存员工的数据
         $.ajax({
-            url:"/emp/"+$(this).attr("edit-id"),
+            url:"/user/"+$(this).attr("edit-id"),
             type:"PUT",//如果用POST的话date需加+"&_method=PUT"
-            data:$("#empUpdateModal form").serialize(),
+            data:$("#userUpdateModal form").serialize(),
             success:function (result) {
-               // alert(result.msg);
+                // alert(result.msg);
                 //1.关闭模态框
-                $("#empUpdateModal").modal('hide');
+                $("#userUpdateModal").modal('hide');
                 //2.回到本页面
                 to_page(currentPage);
             }
@@ -601,68 +691,36 @@
         $("#check_all").prop("checked",flag);
 
     });
+
     //点击全部删除，就批量删除
-    $("#emp_delete_all_btn").click(function () {
-        var empNames ="";
+    $("#user_delete_all_btn").click(function () {
+        var usernames ="";
         var del_idstr="";
-       $.each($(".check_item:checked"),function () {
-           empNames += $(this).parents("tr").find("td:eq(2)").text()+",";//把要删除员工的名字拼起来
-           //组装员工id的字符串
-           del_idstr += $(this).parents("tr").find("td:eq(1)").text()+"-";
-       });
-       //删除empNames多于的逗号
-        empNames =empNames.substring(0,empNames.length-1);
+        $.each($(".check_item:checked"),function () {
+            usernames += $(this).parents("tr").find("td:eq(2)").text()+",";//把要删除用户的名字拼起来
+            //组装用户id的字符串
+            del_idstr += $(this).parents("tr").find("td:eq(1)").text()+"-";
+        });
+        //删除usernames多于的逗号
+        usernames =usernames.substring(0,usernames.length-1);
         del_idstr =del_idstr.substring(0,del_idstr.length-1);
-       if(confirm("确认删除【"+empNames+"】吗？")){
-           //发送ajax删除
-           $.ajax({
-               url:"/emp/"+del_idstr,
-               type:"DELETE",
-               success:function (result) {
-                   alert(result.msg);
-                   //回到当前页
-                   to_page(currentPage);
-               }
-           });
-       }
+        if(confirm("确认删除【"+usernames+"】吗？")){
+            //发送ajax删除
+            $.ajax({
+                url:"/user/"+del_idstr,
+                type:"DELETE",
+                success:function (result) {
+                    alert(result.msg);
+                    //回到当前页
+                    to_page(currentPage);
+                }
+            });
+        }
     });
+
+
+
 </script>
 
-<!--_footer 作为公共模版分离出去-->
-<%--<script type="text/javascript" src="/admin/lib/jquery/1.9.1/jquery.min.js"></script>--%>
-<%--<script type="text/javascript" src="/admin/lib/layer/2.4/layer.js"></script>--%>
-<%--<script type="text/javascript" src="/admin/static/h-ui/js/H-ui.min.js"></script>--%>
-<%--<script type="text/javascript" src="/admin/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->--%>
-
-<%--<!--请在下方写此页面业务相关的脚本-->--%>
-<%--<script type="text/javascript" src="/admin/lib/jquery.contextmenu/jquery.contextmenu.r2.js"></script>--%>
-<%--<script type="text/javascript">--%>
-    <%--$(function(){--%>
-        <%--/*$("#min_title_list li").contextMenu('Huiadminmenu', {--%>
-         <%--bindings: {--%>
-         <%--'closethis': function(t) {--%>
-         <%--console.log(t);--%>
-         <%--if(t.find("i")){--%>
-         <%--t.find("i").trigger("click");--%>
-         <%--}--%>
-         <%--},--%>
-         <%--'closeall': function(t) {--%>
-         <%--alert('Trigger was '+t.id+'\nAction was Email');--%>
-         <%--},--%>
-         <%--}--%>
-         <%--});*/--%>
-
-
-        <%--$("body").Huitab({--%>
-            <%--tabBar:".navbar-wrapper .navbar-levelone",--%>
-            <%--tabCon:".Hui-aside .menu_dropdown",--%>
-            <%--className:"current",--%>
-            <%--index:0,--%>
-        <%--});--%>
-    <%--});--%>
-
-
-
-
-    </body>
+</body>
 </html>

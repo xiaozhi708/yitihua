@@ -4,8 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xiaozhi.common.entity.Employee;
 import com.xiaozhi.common.entity.Msg;
-import com.xiaozhi.common.entity.User;
-import com.xiaozhi.common.entity.UserExample;
 import com.xiaozhi.mapper.UserMapper;
 import com.xiaozhi.service.EmployeeService;
 import com.xiaozhi.service.UserService;
@@ -16,7 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.apache.shiro.subject.Subject;
+
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,17 +121,16 @@ public class EmployeeController {
     public Msg getEmpsWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn) {
 
         List<Employee> emps;
-        if(SecurityUtils.getSubject().hasRole("admin")||SecurityUtils.getSubject().hasRole("总经理")){
-            PageHelper.startPage(pn, 5);
-            emps = employeeService.getAll();
-        }else{
+        if(SecurityUtils.getSubject().hasRole("部门经理")){
             //根据用户名查询用户管理的部门id
             String userName = SecurityUtils.getSubject().getPrincipal().toString();
             int userDeptId = userService.selectDeptIdByUserName(userName);
 
             PageHelper.startPage(pn, 5);//这句话必须紧跟在需要分页的查询语句前面
             emps =employeeService.selectByDept(userDeptId);
-
+        }else{
+            PageHelper.startPage(pn, 5);
+            emps = employeeService.getAll();
         }
         //用PageInfo对结果进行包装，只需要将pageInfo交给页面就行了（封装了详细的分页信息，包括有我们查询出来的数据）
         PageInfo page = new PageInfo(emps, 5);//5为连续显示的页码

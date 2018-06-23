@@ -146,6 +146,23 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.xiaozhi.common.entity.Role">
+    update tbl_role
+    <set>
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id =#{id,jdbcType=INTEGER}
+  </update>
+
   <update id="updateByExample" parameterType="map">
     update tbl_role
     set id = #{record.id,jdbcType=INTEGER},

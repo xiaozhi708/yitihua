@@ -1,14 +1,10 @@
 package com.xiaozhi.service.Impl;
 
-import com.github.pagehelper.PageHelper;
 import com.xiaozhi.common.entity.Employee;
 import com.xiaozhi.common.entity.EmployeeExample;
-import com.xiaozhi.common.entity.User;
-import com.xiaozhi.common.entity.UserExample;
 import com.xiaozhi.mapper.EmployeeMapper;
 import com.xiaozhi.mapper.UserMapper;
 import com.xiaozhi.service.EmployeeService;
-import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +28,7 @@ public class EmployeeServiceImpl implements EmployeeService{
      */
     public List<Employee> getAll() {
         EmployeeExample example = new EmployeeExample();
-       example.setOrderByClause("emp_id ASC");
+        example.setOrderByClause("emp_id ASC");
         return employeeMapper.selectByExampleWithDept(example);
     }
 

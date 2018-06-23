@@ -40,7 +40,7 @@ public class UserRealm extends AuthorizingRealm {
         List<User> userList = userMapper.selectByExample(userExample);
         if(userList!=null){
 //            Set<String> roles =new HashSet<String>();
-            Set<String> roles = roleMapper.selectByUserId(userList.get(0).getId());
+            Set<String> roles = roleMapper.selectByUserId(userList.get(0).getuId());
 //           roles.add(userList.get(0).getId());
           info =new SimpleAuthorizationInfo(roles);
             System.out.println(info);

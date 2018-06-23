@@ -22,5 +22,8 @@ public interface RoleMapper {
 
     int updateByExampleSelective(@Param("record") Role record, @Param("example") RoleExample example);
 
+    //根据主键id更新角色
+    int updateByPrimaryKeySelective(Role role);
+
     int updateByExample(@Param("record") Role record, @Param("example") RoleExample example);
 }

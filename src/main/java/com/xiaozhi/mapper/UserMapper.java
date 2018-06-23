@@ -19,4 +19,12 @@ public interface UserMapper {
     int updateByExampleSelective(@Param("record") User record, @Param("example") UserExample example);
 
     int updateByExample(@Param("record") User record, @Param("example") UserExample example);
+    //新增的
+    int updateByPrimaryKeySelective(User record);
+
+    List<User> selectByExampleWithRole(UserExample userExample);
+
+    User selectByPrimaryKeyWithRole(Integer uId);
+
+
 }

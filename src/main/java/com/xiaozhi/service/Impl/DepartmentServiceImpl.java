@@ -22,6 +22,9 @@ public class DepartmentServiceImpl implements DepartmentService{
     //查询所有部门
     public List<Department> getDepts() {
          List<Department> list =departmentMapper.selectByExample(null);
+//        for(int i=0;i<list.size();i++){
+//            System.out.println("部门："+list.get(i).getDeptName());
+//        }
          return list;
     }
 
